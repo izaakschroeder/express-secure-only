@@ -1,0 +1,30 @@
+{
+	"name": "express-secure-only",
+	"version": "0.1.0",
+	"author": "Izaak Schroeder <izaak.schroeder@gmail.com>",
+	"description": "Ensure your express connections only run over HTTPS.",
+	"keywords": ["express", "https", "secure" ],
+	"repository": {
+
+	},
+	"main": "lib/secure.js",
+	"scripts": {
+		"test": "npm run lint && npm run spec && npm run coverage",
+		"spec": "NODE_PATH=lib NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- -r test/helpers/chai -R spec test/spec",
+		"lint": "eslint --ignore-path .gitignore .",
+		"coverage": "istanbul check-coverage --statement 100 --branch 100 --function 100"
+	},
+	"peerDependencies": {
+		"express": "4.x"
+	},
+	"devDependencies": {
+		"express": "4.x",
+		"eslint": "*",
+		"eslint-plugin-nodeca": "*",
+		"mocha": "*",
+		"istanbul": "*",
+		"chai": "*",
+		"supertest": "*",
+		"supertest-chai": "*"
+	}
+}
