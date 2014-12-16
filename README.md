@@ -22,3 +22,13 @@ app.get('/', function(req, res) {
 });
 app.listen();
 ```
+
+Usage with a custom host or port:
+
+```javascript
+
+app.use(secure({
+    host: 'localhost:3001'
+}));
+
+```
