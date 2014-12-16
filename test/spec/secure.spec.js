@@ -19,17 +19,15 @@ describe('secure', function() {
 		this.app.set('trust proxy', true);
 	});
 
-	it('should fail when not secure', function(done) {
+	it('should redirect when not secure', function(done) {
 		this.app.use(injectProtocol('http'));
 		this.app.use(secure());
 		this.app.get('/', function(req, res) {
-			res.status(200).send();
+			res.status(200).send('foo');
 		});
 		request(this.app)
 			.get('/')
-			.expect(function(res) {
-				expect(res).to.have.status(403);
-			})
+			.expect(302)
 			.end(done);
 	});
 
@@ -37,13 +35,11 @@ describe('secure', function() {
 		this.app.use(injectProtocol('https'));
 		this.app.use(secure());
 		this.app.get('/', function(req, res) {
-			res.status(200).send();
+			res.status(200).send('foo');
 		});
 		request(this.app)
 			.get('/')
-			.expect(function(res) {
-				expect(res).to.have.status(200);
-			})
+			.expect(200, 'foo')
 			.end(done);
 	});
 
@@ -51,18 +47,24 @@ describe('secure', function() {
 		this.app.use(injectProtocol('http'));
 		this.app.use(secure());
 		this.app.get('/', function(req, res) {
-			res.status(200).send();
+			res.status(200).send('foo');
 		});
 		request(this.app)
-		.get('/foo?bar=4')
-		.expect(function(res) {
-			expect(res.headers).to.have.property('location');
-			// TODO: This is kind of brittle. Is there a better way?
-			expect(/^https:/.test(res.headers.location)).to.be.true;
-			expect(/\/foo\?bar=4$/.test(res.headers.location)).to.be.true;
-			expect(/127.0.0.1:\d+/.test(res.headers.location)).to.be.true;
-		})
-		.end(done);
+			.get('/foo?bar=4')
+			.expect('Location', 'https://127.0.0.1/foo?bar=4')
+			.end(done);
+	});
+
+	it('should include honor the host option', function(done) {
+		this.app.use(injectProtocol('http'));
+		this.app.use(secure({host: 'foobar:32'}));
+		this.app.get('/', function(req, res) {
+			res.status(200).send('foo');
+		});
+		request(this.app)
+			.get('/foo?bar=4')
+			.expect('Location', 'https://foobar:32/foo?bar=4')
+			.end(done);
 	});
 
 });
