@@ -5,8 +5,10 @@
 	"description": "Ensure your express connections only run over HTTPS.",
 	"keywords": ["express", "https", "secure" ],
 	"repository": {
-
+		"type": "git",
+		"url": "https://github.com/izaakschroeder/express-secure-only"
 	},
+	"license": "CC0-1.0",
 	"main": "lib/secure.js",
 	"scripts": {
 		"test": "npm run lint && npm run spec && npm run coverage",
